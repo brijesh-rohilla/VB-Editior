@@ -1,0 +1,131 @@
+body {
+  background-color: #eee;
+  word-break: break-word;
+  font-family: Roboto, "Helvetica Neue", Arial, Helvetica, Sans-serif;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.navbar-logo {
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  font-size: 1.25rem;
+  line-height: inherit;
+  white-space: wrap;
+  font-family: 'Ubuntu', sans-serif;
+  color: #2874f0;
+  transform: scale(1.2, 1.2);
+}
+
+.navbar-logo:hover,
+.navbar-logo:focus {
+  opacity: 0.9;
+}
+
+
+/*#__NAV_RIGHT__*/
+.nav-right {
+  min-width: 20%;
+}
+
+@media (max-width: 575.98px) {
+  .navbar-spreater {
+    height: 0.5rem;
+  }
+
+}
+
+.profile-photo-img {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.sidebar-sticky .nav-link {
+  font-weight: 500;
+  color: #333;
+}
+
+.sidebar-sticky .nav-link .feather {
+  margin-right: 4px;
+  color: #999;
+}
+
+.sidebar-sticky .nav-link.active {
+  color: #007bff;
+}
+
+.sidebar-sticky .nav-link:hover .feather,
+.sidebar-sticky .nav-link.active .feather {
+  color: inherit;
+}
+
+.sidebar-sticky-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+
+.sidebar-sticky .feather {
+  width: 20px;
+  height: 20px;
+  vertical-align: text-bottom;
+}
+
+/*#__PAGE__*/
+.page {
+  padding-top: 3.95rem;
+}
+
+
+@media (max-width: 575.98px) {
+  .page {
+    padding-top: 6.9rem;
+  }
+}
+
+.moji {
+  height: 1.2rem;
+}
+
+
+/*#__FOOTER__*/
+.footer {
+  margin-top: auto;
+  background-color: #212121;
+}
+
+.footer p,
+.footer span {
+  color: #6c757d;
+  margin-bottom: .5rem
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: none
+}
+
+/* ===================================== */
+/*#__CUSTOM__*/
+.custom-shadow {
+  box-shadow: 0 0.1rem 0.35rem rgba(0, 0, 0, 0.25);
+}
