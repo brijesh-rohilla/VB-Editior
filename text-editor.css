@@ -113,11 +113,6 @@ aside .dropdown-toggle:focus {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.dropdown-menu .btn:not(.dropdown-toggle):focus,
-.toolbar .btn:not(.dropdown-toggle):focus {
-  background-color: #cbd3da;
-}
-
 .dropdown-menu {
   top: 2.5rem;
   border: none;

@@ -128,37 +128,37 @@
                 <div class="dropright">
                   <button class="btn dropdown-toggle w-100 text-secondary" type="button" id="TextColorEdit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Text Color </button>
                   <div class="dropdown-menu custom-shadow border-left border-right" aria-labelledby="TextColorEdit">
-                    <button class="btn w-100" onclick="addStyle('text-primary');" title="Text primiry"><span class="text-primary">Text</span></button>
-                    <button class="btn w-100" onclick="addStyle('text-secondary');" title="Text secondary"><span class="text-secondary">Text</span></button>
-                    <button class="btn w-100" onclick="addStyle('text-success');" title="Text sucess"><span class="text-success">Text</span></button>
-                    <button class="btn w-100" onclick="addStyle('text-info')" title="Text info"><span class="text-info">Text</span></button>
-                    <button class="btn w-100" onclick="addStyle('text-warning');" title="Text warning"><span class="text-warning">Text</span></button>
-                    <button class="btn w-100" onclick="addStyle('text-danger');" title="Text danger"><span class="text-danger">Text</span></button>
+                    <button class="btn w-100 t-primary" onclick="addStyle('text-primary');" title="Text primiry"><span class="text-primary">Text</span></button>
+                    <button class="btn w-100 t-secondary" onclick="addStyle('text-secondary');" title="Text secondary"><span class="text-secondary">Text</span></button>
+                    <button class="btn w-100 t-success" onclick="addStyle('text-success');" title="Text sucess"><span class="text-success">Text</span></button>
+                    <button class="btn w-100 t-info" onclick="addStyle('text-info')" title="Text info"><span class="text-info">Text</span></button>
+                    <button class="btn w-100 t-warning" onclick="addStyle('text-warning');" title="Text warning"><span class="text-warning">Text</span></button>
+                    <button class="btn w-100 t-danger" onclick="addStyle('text-danger');" title="Text danger"><span class="text-danger">Text</span></button>
                   </div>
                 </div>
-                <button class="btn w-100" onclick="createStyle('mark');"><mark class="px-2">Hilight</mark></button>
-                <button class="btn w-100" onclick="createStyle('small');"><small>small</small></button>
-                <button class="btn w-100" onclick="createStyle('sub');">A<sub>sub</sub></button>
-                <button class="btn w-100" onclick="createStyle('sup');">A<sup>sup</sup></button>
-                <button class="btn w-100" onclick="addStyle('lead');">Lead</button>
-                <button class="btn w-100" onclick="addStyle('list-unstyled');">unstyle list</button>
+                <button id="btn-mark" class="btn w-100" onclick="createStyle('mark');"><mark class="px-2">Hilight</mark></button>
+                <button id="btn-small" class="btn w-100" onclick="createStyle('small');"><small>small</small></button>
+                <button id="btn-sub" class="btn w-100" onclick="createStyle('sub');">A<sub>sub</sub></button>
+                <button id="btn-sup" class="btn w-100" onclick="createStyle('sup');">A<sup>sup</sup></button>
+                <button id="btn-lead" class="btn w-100" onclick="addStyle('lead');">Lead</button>
+                <button id="btn-list-unstyled" class="btn w-100" onclick="addStyle('list-unstyled');">unstyle list</button>
               </div>
             </div>
           </div>
           <div class="btn-group border-right" role="group" aria-label="Edit text">
-            <button class="btn" onclick="createStyle('strong');" title="Bold"><span data-feather="bold"></span></button>
-            <button class="btn" onclick="createStyle('em');" title="Italic"><span data-feather="italic"></span></button>
+            <button id="btn-bold" class="btn" onclick="createStyle('strong');" title="Bold"><span data-feather="bold"></span></button>
+            <button id="btn-em" class="btn" onclick="createStyle('em');" title="Italic"><span data-feather="italic"></span></button>
             <div class="dropdown">
-              <button class="btn dropdown-toggle" type="button" id="textAlignDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span data-feather="align-center"></span></button>
+              <button class="btn dropdown-toggle text-align" type="button" id="textAlignDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span data-feather="align-center"></span></button>
               <div class="dropdown-menu custom-shadow border-0" aria-labelledby="textAlignDropdown">
-                <button class="btn w-100" onclick="textAlign('text-left');"><span data-feather="align-left"></span></button>
-                <button class="btn w-100" onclick="textAlign('text-center');"><span data-feather="align-center"></span></button>
-                <button class="btn w-100" onclick="textAlign('text-right');"><span data-feather="align-right"></span></button>
-                <button class="btn w-100" onclick="textAlign('text-justify');"><span data-feather="align-justify"></span></button>
+                <button class="btn w-100 t-left" onclick="textAlign('text-left');"><span data-feather="align-left"></span></button>
+                <button class="btn w-100 t-center" onclick="textAlign('text-center');"><span data-feather="align-center"></span></button>
+                <button class="btn w-100 t-right" onclick="textAlign('text-right');"><span data-feather="align-right"></span></button>
+                <button class="btn w-100 t-justify" onclick="textAlign('text-justify');"><span data-feather="align-justify"></span></button>
               </div>
             </div>
-            <button class="btn" onclick="createStyle('ins');" title="Underline"><span data-feather="underline"></span></button>
-            <button class="btn" onclick="createStyle('s');" title="Deleted"><img src="images/strike.svg" alt="delete text"></button>
+            <button id="btn-ins" class="btn" onclick="createStyle('ins');" title="Underline"><span data-feather="underline"></span></button>
+            <button id="btn-s" class="btn" onclick="createStyle('s');" title="Deleted"><img src="images/strike.svg" alt="delete text"></button>
           </div>
           <div class="btn-group" role="group" aria-label="Remove items">
             <button class="btn" onclick="deleteItem();" title="delete item"><span data-feather="trash-2"></span></button>
@@ -177,18 +177,18 @@
               <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" id="ImageEditDropdpwnButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Image Style </button>
                 <div class="dropdown-menu custom-shadow border-0" aria-labelledby="ImageEditDropdpwnButton">
-                  <button class="btn w-100" onclick="imgStyle('img-thumbnail');">Thumbnail</button>
-                  <button class="btn w-100" onclick="imgStyle('rounded');">Rounded</button>
+                  <button id="img-thumbnail" class="btn w-100" onclick="imgStyle('img-thumbnail');">Thumbnail</button>
+                  <button id="img-rounded" class="btn w-100" onclick="imgStyle('rounded');">Rounded</button>
                 </div>
               </div>
             </div>
-            <button class="btn" onclick="" title="insert link" id="img-link"><span data-feather="link-2"></span></button>
+            <button class="btn" onclick="creatImgLink();" title="insert link"><span data-feather="link-2"></span></button>
             <div class="dropdown">
               <button class="btn dropdown-toggle" type="button" id="imageAlignDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span data-feather="align-center"></span></button>
               <div class="dropdown-menu custom-shadow border-0" aria-labelledby="imageAlignDropdown">
-                <button class="btn w-100" onclick="imgAlign('text-left');"><span data-feather="align-left"></span></button>
-                <button class="btn w-100" onclick="imgAlign('text-center');"><span data-feather="align-center"></span></button>
-                <button class="btn w-100" onclick="imgAlign('text-right');"><span data-feather="align-right"></span></button>
+                <button class="btn w-100 t-left" onclick="imgAlign('text-left');"><span data-feather="align-left"></span></button>
+                <button class="btn w-100 t-center" onclick="imgAlign('text-center');"><span data-feather="align-center"></span></button>
+                <button class="btn w-100 t-right" onclick="imgAlign('text-right');"><span data-feather="align-right"></span></button>
               </div>
             </div>
             <button class="btn" onclick="deleteItem();" title="delete item"><span data-feather="trash-2"></span></button>
@@ -248,8 +248,8 @@
   <script src="javascripts/jquary-3.5.1.min.js"></script>
   <script type="text/javascript" src="javascripts/main.js"></script>
   <script type="text/javascript" src="javascripts/notifications.js"></script>
+  <script type="text/javascript" src="javascripts/feature.js"></script>
   <script type="text/javascript" src="text-editor.js"></script>
-  <script type="text/javascript" src="html-parser.js"></script>
 </body>
 
 </html>

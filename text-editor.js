@@ -33,6 +33,12 @@
 var lastKey = null;
 var lastSelector = null;
 var notDropperElement = "ol ul".split(" ");
+var itemAlign = 'text-left text-center text-right text-justify';
+var textColors = 'text-primary text-secondary text-success text-info text-warning text-danger';
+var itemAlignArry = itemAlign.split(" ");
+var textColorsArry = textColors.split(" ");
+
+
 
 function editorRef() {
   let ns = '.img-h';
@@ -41,7 +47,6 @@ function editorRef() {
 
 
   textEditorConent.off('click').click(function(event) {
-    event.stopPropagation();
     feelEmptyElement();
 
     if ($(this).hasClass('sl-elm' || 'n-sl-elm')) {
@@ -76,7 +81,6 @@ function editorRef() {
       $(this).removeClass('nh-sl-elm');
     },
     click: function(event) {
-      event.stopPropagation();
       feelEmptyElement();
 
       if ($(this).hasClass('sl-elm' || 'n-sl-elm')) {
@@ -96,8 +100,7 @@ function editorRef() {
     }
   });
 
-
-  $(document).click(function() {
+  $('aside, header, #editor-nav').off('click').click(function() {
     if (lastSelector) {
       lastSelector.removeClass('sl-elm n-sl-elm');
       lastSelector.removeAttr('contentEditable');
@@ -105,7 +108,7 @@ function editorRef() {
       feelEmptyElement();
       hideToolBar();
     }
-  })
+  });
 
 }
 
@@ -270,7 +273,6 @@ function addStyle(style) {
   let isFound = false;
   let selection = window.getSelection();
   let selectorElememts = selector.find('span');
-  let textClass = 'text-primary text-secondary text-success text-info text-warning text-danger';
 
   if (!selection.isCollapsed) {
     let range = selection.getRangeAt(0);
@@ -287,7 +289,7 @@ function addStyle(style) {
         if (selectorElememts.eq(i).hasClass(style)) {
           deleteStyleNode(selectorElememts.eq(i), selector, style);
         } else {
-          selectorElememts.eq(i).removeClass(textClass);
+          selectorElememts.eq(i).removeClass(textColors);
           selectorElememts.eq(i).addClass(style);
         }
         isFound = true;
@@ -306,7 +308,7 @@ function addStyle(style) {
     if (selector.hasClass(style)) {
       selector.removeClass(style);
     } else {
-      selector.removeClass(textClass);
+      selector.removeClass(textColors);
       selector.addClass(style);
     }
   }
@@ -359,14 +361,13 @@ function removeWrongSelectionUI(selector) {
 function textAlign(style) {
   let selection = window.getSelection();
   let selector = $('.sl-elm');
-  let textClass = 'text-left text-center text-right text-justify';
 
   if (!selection.isCollapsed) {
     let range = selection.getRangeAt(0);
 
     if (selection.toString() === selector.text()) {
       try {
-        selector.removeClass(textClass);
+        selector.removeClass(itemAlign);
         selector.addClass(style);
         selection.removeRange(selection.getRangeAt(0));
       } catch (e) {
@@ -376,7 +377,7 @@ function textAlign(style) {
       selection.removeRange(selection.getRangeAt(0));
     }
   } else {
-    selector.removeClass(textClass);
+    selector.removeClass(itemAlign);
     selector.addClass(style);
   }
 }
@@ -506,11 +507,7 @@ function getImageData(file, alt, caption) {
 }
 
 
-/**
- * convert Image to Link
- * @param  {node}
- */
-$('#img-link').click(function() {
+function creatImgLink() {
   let link = window.prompt('Insert Link:', 'https://');
   let selector = $('.n-sl-elm.img-h');
 
@@ -531,7 +528,7 @@ $('#img-link').click(function() {
       editorRef();
     }
   }
-});
+}
 
 
 function imgStyle(style) {
@@ -547,7 +544,7 @@ function imgAlign(style) {
   let selection = window.getSelection();
   let selector = $('.n-sl-elm');
   if (selection.isCollapsed) {
-    selector.removeClass('text-left text-center text-right');
+    selector.removeClass(itemAlign);
     selector.addClass(style);
   }
 }
@@ -562,35 +559,211 @@ function execCmdWithArg(command, arg) {
 }
 
 
-/*__SOURCECODE_TOGGELER__*/
-var showingSource = false;
 
-function toggleSource() {
-  $('.sl-elm, .n-sl-elm').removeAttr('contentEditable');
-  $('.sl-elm, .n-sl-elm').removeClass('sl-elm n-sl-elm');
-  hideToolBar();
+/*__TOOLBAR_FUNCTIONALITY__*/
 
-  if (showingSource) {
-    $('#html-editor').hide();
-    $('#text-editor').show();
-    $('aside .btn, #editor-nav .btn:not(#source-toggle-btn), #img-uploader').removeAttr('disabled');
-    showingSource = false;
-    feelEmptyElement();
-  } else {
-    $('#text-editor').hide();
-    $('#html-editor')
-      .text($('#text-editor').html())
-      .show();
-    $('aside .btn, #editor-nav .btn:not(#source-toggle-btn), #img-uploader').attr('disabled', '');
-    showingSource = true;
-    parseSourceCode();
-    if (sessionStorage.msgShown !== 'true') {
-      setTimeout(function() {
-        Notification('Developers Console', 'This is only for read!!', 'warning');
-        sessionStorage.msgShown = 'true';
-      }, 600);
+$('.dropdown-menu .btn:not(.dropdown-toggle), .toolbar .btn:not(.dropdown-toggle)').click(function() {
+  let cls = 't-left t-center t-right t-justify t-primary t-secondary t-success t-info t-warning t-danger'.split(" ");
+  let selector = $(this);
+
+  for (let i = 0; i < cls.length; i++) {
+    if (selector.hasClass(cls[i])) {
+      selector.siblings().css('background-color', '');
     }
   }
+
+  if (selector.css('background-color') === 'rgba(0, 0, 0, 0.06)') {
+    selector.css('background-color', '');
+  } else {
+    selector.css('background-color', 'rgba(0, 0, 0, 0.06)');
+  }
+
+});
+
+
+document.onselectionchange = function() {
+  let selector = $('.sl-elm, .n-sl-elm');
+  let selection = window.getSelection();
+
+  if (!selection.anchorNode || !selector[0]) {
+    return;
+  }
+
+  $('.toolbar .btn').css('background-color', '');
+  /**
+   * color toolbar btn
+   * style applied for markep tag
+   * these are always child
+   */
+  if (!selection.isCollapsed) {
+    if (selection.toString() === selection.anchorNode.data) {
+      let parent = selection.anchorNode.parentNode;
+
+      while (parent.className !== 'sl-elm') {
+        if (parent.nodeName.toLowerCase() === 'span') {
+          fillToolbar(parent.className);
+        } else {
+          fillToolbar(parent.nodeName.toLowerCase())
+        }
+        parent = parent.parentNode;
+        if (!parent) {
+          break;
+        }
+      }
+
+    }
+  } else {
+    let parent = selection.anchorNode.parentNode;
+    while (parent.className !== 'sl-elm') {
+      if (parent.nodeName.toLowerCase() === 'span') {
+        fillToolbar(parent.className);
+      } else {
+        fillToolbar(parent.nodeName.toLowerCase())
+      }
+      parent = parent.parentNode;
+      if (!parent) {
+        break;
+      }
+    }
+  }
+
+
+  /**
+   * color toolbar btn
+   * style applied for alignment
+   * these are always perent
+   */
+  if (!selection.isCollapsed && selection.toString() === selector.text()) {
+    $('.dropdown-toggle.text-align').html(`<span data-feather="align-center"></span>`);
+    feather.replace();
+
+    itemAlignArry.forEach(function(element) {
+      fillClass(selector, element);
+    });
+
+    textColorsArry.forEach(function(element) {
+      fillClass(selector, element);
+    });
+
+    fillClass(selector, 'lead');
+    fillClass(selector, 'list-unstyled');
+
+  } else {
+    $('.dropdown-toggle.text-align').html(`<span data-feather="align-center"></span>`);
+    feather.replace();
+
+    itemAlignArry.forEach(function(element) {
+      fillClass(selector, element);
+    });
+
+    textColorsArry.forEach(function(element) {
+      fillClass(selector, element);
+    });
+
+    fillClass(selector, 'lead');
+    fillClass(selector, 'list-unstyled');
+
+    /**
+     * color toolbar btn
+     * image toolbar
+     */
+    if (selector.hasClass('img-h')) {
+      fillClass(selector.find('img'), 'img-thumbnail');
+      fillClass(selector.find('img'), 'rounded');
+    }
+
+
+  }
+
+}
+
+
+function fillToolbar(tag) {
+  let alignToggle = $('.dropdown-toggle.text-align');
+  switch (tag) {
+    case 'strong':
+      $('#btn-bold').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'em':
+      $('#btn-em').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'ins':
+      $('#btn-ins').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 's':
+      $('#btn-s').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'mark':
+      $('#btn-mark').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'small':
+      $('#btn-small').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'sub':
+      $('#btn-sub').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'sup':
+      $('#btn-sup').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'text-left':
+      $('.btn.t-left').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      alignToggle.html(`<span data-feather="align-left"></span>`);
+      feather.replace();
+      break;
+    case 'text-center':
+      $('.btn.t-center').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      alignToggle.html(`<span data-feather="align-center"></span>`);
+      feather.replace();
+      break;
+    case 'text-right':
+      $('.btn.t-right').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      alignToggle.html(`<span data-feather="align-right"></span>`);
+      feather.replace();
+      break;
+    case 'text-justify':
+      $('.btn.t-justify').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      alignToggle.html(`<span data-feather="align-justify"></span>`);
+      feather.replace();
+      break;
+    case 'text-primary':
+      $('.btn.t-primary').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'text-secondary':
+      $('.btn.t-secondary').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'text-success':
+      $('.btn.t-success').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'text-info':
+      $('.btn.t-info').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'text-warning':
+      $('.btn.t-warning').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'text-danger':
+      $('.btn.t-danger').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'lead':
+      $('#btn-lead').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'list-unstyled':
+      $('#btn-list-unstyled').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'img-thumbnail':
+      $('#img-thumbnail').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+    case 'rounded':
+      $('#img-rounded').css('background-color', 'rgba(0, 0, 0, 0.06)');
+      break;
+  }
+}
+
+
+function fillClass(selector, className) {
+  if (selector.hasClass(className)) {
+    fillToolbar(className);
+  }
+
 }
 
 
