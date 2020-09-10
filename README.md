@@ -1,9 +1,11 @@
 # VB-Editor
-Free and open-source Web-based JavaScript Text Editor
+Free and open-source Web-based JavaScript Text Editor.
 
-## Features 
+Note: The HTML generated is totally dependent on bootstrap classes. In the future, we may provide some basics CSS for rendering content.
+
+## Features
+
 * Toolbar that's dance on your hand.
-
 * Tags supported : <br>
 	<b>`<strong>`</b> - bold <br>
  	<b>`<em>`</b> 		-italic <br>
@@ -30,6 +32,8 @@ Free and open-source Web-based JavaScript Text Editor
 * six type <b>Text Color</b>.
 * Can see generated html.
 
-## Key Features
+### Key Features
 
-`Shift + Ctrl` - Hide and Show Toolbar.
+* Click on text and then `Ctrl` - select the whole applied style text.
+* `Shift + Ctrl` - Hide and Show Toolbar.
+* `Alt + c` - open text color dropdown.

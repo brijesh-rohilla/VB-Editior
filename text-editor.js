@@ -167,6 +167,13 @@ function showToolBar(element, event) {
   let mouseLeft = event.pageX / 3.5;
   let posTop = element[0].getBoundingClientRect().top;
   let posLeft = element[0].getBoundingClientRect().left;
+  $('#btn-list-unstyled').hide();
+
+  notDropperElement.forEach(function(e) {
+    if (element[0].nodeName.toLowerCase() === e) {
+      $('#btn-list-unstyled').show();
+    }
+  });
 
   if (element.hasClass('img-h')) {
     $('#text-toolbar').hide(10);
@@ -201,8 +208,9 @@ function createStyle(element) {
 
     for (let i = 0; i < selectorElememts.length; i++) {
       if (selectorElememts.eq(i).text() === selector.text()) {
-        insertNode(selector, element, range, selection);
+        insertNode(selectorElememts.eq(i), element, range, selection);
         deleteNode(selectorElememts.eq(i), selector, element);
+        isFound = true;
         break;
       }
 
@@ -279,12 +287,6 @@ function addStyle(style) {
 
     for (let i = 0; i < selectorElememts.length; i++) {
 
-      if (selectorElememts.eq(i).text() === selector.text()) {
-        insertStyleNode(selector, range, selection, style);
-        selector.toggleClass(style);
-        break;
-      }
-
       if (selectorElememts.eq(i).text() === selection.toString()) {
         if (selectorElememts.eq(i).hasClass(style)) {
           deleteStyleNode(selectorElememts.eq(i), selector, style);
@@ -318,6 +320,15 @@ function addStyle(style) {
 
 function insertStyleNode(selector, range, selection, style) {
   try {
+    if (selection.toString() === selector.text()) {
+      if (selector.hasClass(style)) {
+        selector.removeClass(style);
+      } else {
+        selector.removeClass(textColors);
+        selector.addClass(style);
+      }
+      return;
+    }
     removeWrongSelectionUI(selector);
     let elm = document.createElement('span');
     $(elm).addClass(style);
@@ -589,6 +600,7 @@ document.onselectionchange = function() {
     return;
   }
 
+  let range = selection.getRangeAt(0);
   $('.toolbar .btn').css('background-color', '');
   /**
    * color toolbar btn
@@ -614,6 +626,7 @@ document.onselectionchange = function() {
     }
   } else {
     let parent = selection.anchorNode.parentNode;
+
     while (parent.className !== 'sl-elm') {
       if (parent.nodeName.toLowerCase() === 'span') {
         fillToolbar(parent.className);
@@ -625,6 +638,13 @@ document.onselectionchange = function() {
         break;
       }
     }
+
+    selector.off('keydown').keydown(function(event) {
+      if (event.ctrlKey) {
+        range.selectNodeContents(selection.anchorNode);
+      }
+    });
+
   }
 
 
@@ -777,6 +797,12 @@ $(document).on({
   keydown: function(e) {
     if (e.shiftKey && e.ctrlKey) {
       hideToolBar();
+    }
+
+    if (e.altKey && e.keyCode === 67) {
+      $('#text-toolbar').show(10);
+      $('#TextStyleDropdown').click();
+      $('#TextColorEdit').click();
     }
   },
   keyup: function(e) {

@@ -33,6 +33,10 @@ aside {
   background: #555;
 }
 
+::selection {
+  background-color: rgba(255, 230, 0, 0.5);
+}
+
 .feather-chevron-left,
 .feather-chevron-right {
   opacity: 0.7;
