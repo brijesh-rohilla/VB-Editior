@@ -6,13 +6,13 @@
     <title>Text Editor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <link rel="preload" href="https://fonts.googleapis.com/css?family=Roboto&display=swap" as="style">
-    <link rel="preload" href="https://fonts.googleapis.com/css?family=Ubuntu:700&display=swap" as="style">
+    <!-- <link rel="preload" href="https://fonts.googleapis.com/css?family=Roboto&display=swap" as="style"> -->
+    <!-- <link rel="preload" href="https://fonts.googleapis.com/css?family=Ubuntu:700&display=swap" as="style"> -->
     <link rel="preload" href="stylesheets/bootstrap-4.5.0.min.css" as="style">
     <link rel="preload" href="stylesheets/notifications.css" as="style">
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:700&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"> -->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Ubuntu:700&display=swap" rel="stylesheet"> -->
     <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap-4.5.0.min.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/notifications.css">
 
@@ -47,8 +47,6 @@
     <div class="row page">
       <main role="main" class="col px-4 px-lg-5">
         <div class="bg-dark w-100 text-right pr-2 pt-2 shadow-sm" style="height: 3.5rem;" id="editor-nav">
-          <button class="btn" onclick="newItem('ol');" title="Numberd list"><img src="images/numbers.svg" alt="number list"></button>
-          <button class="btn text-light" onclick="newItem('ul');" title="Bulleted list"><span data-feather="list"></span></button>
           <button id="source-toggle-btn" class="btn text-light" onclick="toggleSource();"><span data-feather="terminal"></span></button>
         </div>
         <!-- EDITORS -->
@@ -81,19 +79,31 @@
         <hr class="my-0">
         <div class="row">
           <div class="col-12">
-            <div class="sidebar-sticky" style="font-size: .875rem;">
+            <div class="sidebar-sticky">
               <ul class="nav flex-column">
                 <li class="nav-item">
-                  <button class="btn nav-link text-secondary" onclick="newItem('hr');" title="Divider">
+                  <button class="btn w-100 text-left nav-link text-secondary" onclick="newItem('hr');" title="Divider">
                     <span data-feather="minus"></span>
                     Divider
                   </button>
                 </li>
-                <li class="nav-item" hidden>
-                  <a class="nav-link" href="#">
-                    <span data-feather="file"></span>
-                    Orders
-                  </a>
+                <li class="nav-item">
+                  <button class="btn w-100 text-left nav-link text-secondary" onclick="newItem('ul');" title="Bulleted list">
+                    <span data-feather="list"></span>
+                    Bulleted list
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="btn w-100 text-left nav-link text-secondary" onclick="newItem('ol');" title="Numberd list">
+                    <img src="images/numbers.svg" alt="Number list" class="mr-1 mt-n1">
+                    Number list
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="btn w-100 text-left nav-link text-secondary" onclick="newItem('blockquote');" title="Quote">
+                    <img src="images/quote.svg" alt="Number list" class="mr-1 mt-n1">
+                    Quote
+                  </button>
                 </li>
               </ul>
               <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted" hidden>

@@ -6,22 +6,20 @@ Note: The HTML generated is totally dependent on bootstrap classes. In the futur
 ## Features
 
 * Toolbar that's dance on your hand.
-* Tags supported : <br>
+* Styled tags supported : <br>
 	<b>`<strong>`</b> - bold <br>
  	<b>`<em>`</b> 		-italic <br>
   <b>`<ins>`</b> 		-underline <br>
-  <b>`<s>`</b> 			- deleted
+  <b>`<s>`</b> 			- deleted <br>
+  <b>`<mark>`</b>  - highlight <br>
+	<b>`<small>`</b> - small <br>
+	<b>`<sub>`</b> 	 - subscript <br>
+	<b>`<sup>`</b> 	 - superscript
 
 * Headings : <br>
 	<b>`<h1>`</b> - main heading <br>
 	<b>`<h2>`</b> - sub heading <br>
 	<b>`<h3>`</b> - super heading
-
-* Styled Tages : <br>
-	<b>`<mark>`</b>  - highlight <br>
-	<b>`<small>`</b> - small <br>
-	<b>`<sub>`</b> 	 - subscript <br>
-	<b>`<sup>`</b> 	 - superscript
 
 * Images : <br>
 <b>Simple image</b> and <b>Figures</b>.
@@ -29,6 +27,7 @@ Note: The HTML generated is totally dependent on bootstrap classes. In the futur
 * Lists : <br>
 <b>Orderd</b> and <b>Unorded</b>. (styled or unstyled)
 
+* Quotes
 * six type <b>Text Color</b>.
 * Can see generated html.
 

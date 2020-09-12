@@ -87,3 +87,8 @@ function parseSourceCode() {
 
   $('#html-editor').html(parsedDoc);
 }
+
+
+
+//=========================
+

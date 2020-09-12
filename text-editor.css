@@ -127,7 +127,8 @@ aside .dropdown-toggle:focus {
 }
 
 .dropdown-menu[aria-labelledby="textAlignDropdown"],
-.dropdown-menu[aria-labelledby="imageAlignDropdown"] {
+.dropdown-menu[aria-labelledby="imageAlignDropdown"],
+.dropdown-menu[aria-labelledby="quoteDropdown"] {
   min-width: 0;
   width: 4rem;
 }
@@ -135,6 +136,7 @@ aside .dropdown-toggle:focus {
 #textAlignDropdown::after,
 #ImageEditDropdpwn::after,
 #imageAlignDropdown::after,
+#quoteDropdown::after,
 aside .dropdown-toggle::after {
   content: "";
   display: none;

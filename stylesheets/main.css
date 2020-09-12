@@ -90,6 +90,10 @@ h2 {
   vertical-align: text-bottom;
 }
 
+.nav-item .btn {
+  font-size: .875rem;
+}
+
 /*#__PAGE__*/
 .page {
   padding-top: 3.95rem;
