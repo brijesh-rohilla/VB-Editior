@@ -10,6 +10,8 @@ aside,
 main {
   overflow-x: hidden;
   overflow-y: auto;
+  /**/
+  margin-top: 3.95rem;
 }
 
 aside {
@@ -21,16 +23,17 @@ aside {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #eee;
+
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
+  background: #ccc;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgba(204, 204, 204, 0.8);
 }
 
 ::selection {
@@ -165,16 +168,6 @@ aside .dropdown-toggle::after {
 }
 
 /*Error UI to user when select multi node*/
-.se-el-err {
-  padding: 0 2px;
-  outline: 1px solid rgba(220, 53, 70, 0.3);
-}
-
-.se-el-c-err {
-  padding: 0 2px;
-  outline: 1px solid rgba(255, 193, 7, 0.3);
-}
-
 .dam {
   opacity: .5;
 }

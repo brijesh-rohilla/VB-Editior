@@ -1,38 +1,41 @@
 # VB-Editor
-Free and open-source Web-based JavaScript Text Editor.
+Free and open-source Web-based JavaScript Web Editor.
 
 Note: The HTML generated is totally dependent on bootstrap classes. In the future, we may provide some basics CSS for rendering content.
 
 ## Features
 
 * Toolbar that's dance on your hand.
-* Styled tags supported : <br>
-	<b>`<strong>`</b> - bold <br>
- 	<b>`<em>`</b> 		-italic <br>
-  <b>`<ins>`</b> 		-underline <br>
-  <b>`<s>`</b> 			- deleted <br>
-  <b>`<mark>`</b>  - highlight <br>
-	<b>`<small>`</b> - small <br>
-	<b>`<sub>`</b> 	 - subscript <br>
-	<b>`<sup>`</b> 	 - superscript
+* Styles supported : 
+  <b>`bold`</b>,    <b>`italic`</b>,
+<b>`underline`</b>, <b>`deleted`</b>,
+<b>`highlight`</b>, <b>`small`</b>,
+<b>`subscript`</b>, <b>`superscript`</b>
 
 * Headings : <br>
 	<b>`<h1>`</b> - main heading <br>
 	<b>`<h2>`</b> - sub heading <br>
 	<b>`<h3>`</b> - super heading
 
-* Images : <br>
-<b>Simple image</b> and <b>Figures</b>.
-
-* Lists : <br>
-<b>Orderd</b> and <b>Unorded</b>. (styled or unstyled)
-
+* Paragraph
+* Images
+* Lists
+* Links
 * Quotes
 * six type <b>Text Color</b>.
-* Can see generated html.
+
 
 ### Key Features
 
-* Click on text and then `Ctrl` - select the whole applied style text.
-* `Shift + Ctrl` - Hide and Show Toolbar.
-* `Alt + c` - open text color dropdown.
+* `Ctrl` then click on text - select the text. (styled)
+* `Alt + c` - Toggle text color dropdown.
+* `Ctrl + Shift` - Tiggle Toolbar. (when you need to hide toolbar and vice versa)
+
+
+### control newly created element
+
+* `by default` elements are created and append at the very last.
+* `Ctrl` - elements are created and append at the last of the selected element.
+* `Ctrl + Shift` - elements are created and append at the before of selected element.
+
+	(Here, elements means new Headings, Paragraph, Lists, Quots etc.)

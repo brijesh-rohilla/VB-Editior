@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Ubuntu;
+  src: url(../fonts/Ubuntu/Ubuntu-Bold.ttf);
+}
+
 body {
   background-color: #eee;
   word-break: break-word;
