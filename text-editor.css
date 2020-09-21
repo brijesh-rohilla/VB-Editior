@@ -46,6 +46,12 @@ aside {
   margin-left: -0.4rem;
 }
 
+.feather-download {
+  height: 16px;
+  width: 16px;
+  margin-top: -2px;
+}
+
 
 /*__EDITOR_NAVBAR__*/
 #editor-nav {

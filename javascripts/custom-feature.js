@@ -2,32 +2,118 @@
 
   "use strict";
 
-  $( '.nav-right>.btn:last' ).text( 'Download' );
+  // modify download button.
+  $( '.nav-right>.btn:last' )
+    .attr( { 'id': 'doc-download' } )
+    .html( `<span data-feather="download"></span> Download` );
+  feather.replace();
+
+
+  $( '#doc-download' ).click( function() {
+    let link = document.createElement( 'a' );
+    link.download = 'vb-doc.html';
+
+    let blob = new Blob( [ htmlTemplete( parseSourceCode() ) ], { type: 'text/html' } );
+
+    link.href = URL.createObjectURL( blob );
+    link.click();
+
+    URL.revokeObjectURL( link.href );
+  } )
+
 
   function parseSourceCode() {
-    let editor = $( '#text-editor' );
-    let str = editor.text();
-    let patt = /<.+?>/g;
-    let patt1 = /".+?"/g;
+    let notRemove = "br, hr, img";
+    let selector = $( "<div></div>" );
+    selector.html( $( '#text-editor' ).html() );
 
-    return str.replace( patt, function( c ) {
-      let parseValue = c.replace( patt1, function( g ) {
+    selector.find( ":not(" + notRemove + "):empty" ).remove();
 
-        // replace inage data to path string.
-        if ( g.split( ':' )[ 0 ] === '"data' ) {
-          return `"../path/to/image"`;
-        } else {
-          return g;
-        }
+    selector.find( "*" )
+      .removeClass( 'sl-elm n-sl-elm' )
+      .removeAttr( 'contentEditable' );
 
-      } )
+    selector.find( "*" ).each( function() {
+      if ( !$( this ).attr( "class" ) ) {
+        $( this ).removeAttr( "class" );
+      }
+    } )
 
-      return parseValue;
-    } );
+    selector.find( "img" )
+      .attr( "href", "../path/to/image" );
 
+    return selector.html();
+  }
+
+  // HTML htmlTemplete
+  function htmlTemplete( data ) {
+    return `<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta name="theme-color" content="#fafafa">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="canonical" href="">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-4.5.0.min.css">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+  <!-- ============================================================= -->
+
+${data}
+
+  <!-- ============================================================= -->
+  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+  <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+  <script>
+window.ga = function() { ga.q.push( arguments ) };
+ga.q = [];
+ga.l = +new Date;
+ga( 'create', 'UA-XXXXX-Y', 'auto' );
+ga( 'set', 'anonymizeIp', true );
+ga( 'set', 'transport', 'beacon' );
+ga( 'send', 'pageview' )
+  </script>
+  <script src="https://www.google-analytics.com/analytics.js" async></script>
+</body>
+
+</html>`
   }
 
 
 } )();
 
-//===========================================================
+//=========================================================== Paese html clise tag
+
+// paeseMissingTag( "<b> the block </b>the unblock </p></i>" );
+
+// function paeseMissingTag( str ) {
+//   let patt = /<\/.+?>/g;
+//   let result, arr = [];
+
+//   if ( result = str.match( patt ) ) {
+//     for ( let i = result.length - 1; i >= 0; i-- ) {
+//       if ( str.indexOf( '<' + result[ i ].split( "/" )[ 1 ] ) === -1 ) {
+//         arr.push( '<' + result[ i ].split( "/" )[ 1 ] );
+//       }
+//     }
+//   }
+//   return arr.join( "" );
+// }

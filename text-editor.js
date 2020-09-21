@@ -172,11 +172,11 @@
         if ( selection.isCollapsed ) {
           let range = selection.getRangeAt( 0 );
           let selectorChild = selection.anchorNode;
-          range.createNode( document.createElement( 'br' ) );
+          range.insertNode( document.createElement( 'br' ) );
 
           if ( selection.anchorOffset === selectorChild.length ) {
             if ( selectorChild.data === selector.text().substr( -selectorChild.length, selectorChild.length ) && lastPressedKey !== 8 ) {
-              range.createNode( document.createElement( 'br' ) );
+              range.insertNode( document.createElement( 'br' ) );
             }
           }
           selection.collapseToEnd();
@@ -234,13 +234,9 @@
 
   }
 
-  // Hide selected element
+  // Hide selected element toolbar
   $( 'aside, aside .btn, header, #editor-nav' ).click( function( event ) {
     if ( lastSelector && !ctrlKey ) {
-      lastSelector.removeClass( 'sl-elm n-sl-elm' );
-      lastSelector.removeAttr( 'contentEditable' );
-      lastSelector = null;
-      fillEmptyElement();
       $( '.toolbar' ).hide( 10 );
     }
   } );
@@ -573,12 +569,14 @@
       insertHtml( newNode, range, true );
 
       // Remove style if any parent exists (same style)
-      let node, parent = newNode.parentElement;
+      let nodeClass, node, parent = newNode.parentElement;
       while ( parent && parent.className !== 'sl-elm' ) {
         if ( parent.nodeName.toLowerCase() === 'span' ) {
           if ( parent.textContent.indexOf( newNode.textContent ) !== -1 ) {
             let pNode = parent.outerHTML.split( newNode.outerHTML );
-            fragment.append( node = parseToValidHtml( pNode[ 0 ] ), newNode, parseToValidHtml( `<span class="${node.firstChild.getAttribute('class')}">${pNode[ 1 ]}` ) );
+            nodeClass = parseToValidHtml( pNode[ 0 ] ).firstChild.getAttribute( 'class' );
+            node = nodeClass === style ? parseToValidHtml( newNode.innerHTML ) : newNode;
+            fragment.append( parseToValidHtml( pNode[ 0 ] ), node, parseToValidHtml( `<span class="${nodeClass}">${pNode[ 1 ]}` ) );
             parent.before( fragment );
             range.selectNodeContents( parent.previousSibling.previousSibling );
             parent.remove();
@@ -613,12 +611,26 @@
     let elem = document.createElement( "div" );
     let frag = document.createDocumentFragment();
     let node, lastNode;
-
-    elem.innerHTML = html;
+    elem.innerHTML = paeseMissingTag( html ) + html;
     while ( ( node = elem.firstChild ) ) {
       lastNode = frag.appendChild( node );
     }
     return frag;
+  }
+
+  function paeseMissingTag( str ) {
+    let patt = /<\/.+?>/g;
+    let result, arr = [];
+
+    if ( result = str.match( patt ) ) {
+      for ( let i = result.length - 1; i >= 0; i-- ) {
+        if ( str.indexOf( '<' + result[ i ].split( "/" )[ 1 ] ) === -1 ) {
+          arr.push( '<' + result[ i ].split( "/" )[ 1 ] );
+        }
+      }
+    }
+
+    return arr.join( "" );
   }
 
   function insertHtml( html, range, isCollapsed ) {
@@ -643,6 +655,7 @@
 
   function joinElem( element ) {
     let node = element.childNodes;
+    element.normalize();
 
     for ( let i = 0; i < node.length - 1; i++ ) {
       if ( node[ i ].nodeType !== 3 ) {
@@ -842,7 +855,7 @@
    * Key Featuers for editor.
    * style Shortcuts events
    */
-  $( "body" ).on( {
+  $( document ).on( {
     keydown: function( event ) {
 
       // toggle toolber
