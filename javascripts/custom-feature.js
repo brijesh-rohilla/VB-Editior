@@ -99,21 +99,3 @@ ga( 'send', 'pageview' )
 
 
 } )();
-
-//=========================================================== Paese html clise tag
-
-// paeseMissingTag( "<b> the block </b>the unblock </p></i>" );
-
-// function paeseMissingTag( str ) {
-//   let patt = /<\/.+?>/g;
-//   let result, arr = [];
-
-//   if ( result = str.match( patt ) ) {
-//     for ( let i = result.length - 1; i >= 0; i-- ) {
-//       if ( str.indexOf( '<' + result[ i ].split( "/" )[ 1 ] ) === -1 ) {
-//         arr.push( '<' + result[ i ].split( "/" )[ 1 ] );
-//       }
-//     }
-//   }
-//   return arr.join( "" );
-// }

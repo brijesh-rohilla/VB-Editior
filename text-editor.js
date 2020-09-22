@@ -489,7 +489,7 @@
       range.deleteContents();
       insertHtml( newNode, range, true );
 
-      // Remove style if any parent exists (same style)
+      // Remove style if any parent exists (same style) {bug with color when tag is papent}
       let parent = newNode.parentElement;
       while ( parent && parent.className !== 'sl-elm' ) {
         if ( parent.nodeName.toLowerCase() === tag ) {
@@ -575,8 +575,8 @@
           if ( parent.textContent.indexOf( newNode.textContent ) !== -1 ) {
             let pNode = parent.outerHTML.split( newNode.outerHTML );
             nodeClass = parseToValidHtml( pNode[ 0 ] ).firstChild.getAttribute( 'class' );
-            node = nodeClass === style ? parseToValidHtml( newNode.innerHTML ) : newNode;
-            fragment.append( parseToValidHtml( pNode[ 0 ] ), node, parseToValidHtml( `<span class="${nodeClass}">${pNode[ 1 ]}` ) );
+            node = nodeClass === style ? parseToValidHtml( paeseMissingTag( pNode[ 1 ] ) + newNode.innerHTML ) : parseToValidHtml( paeseMissingTag( pNode[ 1 ] ) + newNode.outerHTML );
+            fragment.append( parseToValidHtml( pNode[ 0 ] ), node, parseToValidHtml( `<span class="${nodeClass}">${paeseMissingTag( pNode[ 1 ] )+pNode[ 1 ]}` ) );
             parent.before( fragment );
             range.selectNodeContents( parent.previousSibling.previousSibling );
             parent.remove();
@@ -611,7 +611,7 @@
     let elem = document.createElement( "div" );
     let frag = document.createDocumentFragment();
     let node, lastNode;
-    elem.innerHTML = paeseMissingTag( html ) + html;
+    elem.innerHTML = html;
     while ( ( node = elem.firstChild ) ) {
       lastNode = frag.appendChild( node );
     }
@@ -658,7 +658,7 @@
     element.normalize();
 
     for ( let i = 0; i < node.length - 1; i++ ) {
-      if ( node[ i ].nodeType !== 3 ) {
+      if ( node[ i ].nodeType !== 3 && node[ i ].nodeName.toLowerCase() !== 'li' ) {
         if ( node[ i ].nodeName === node[ i + 1 ].nodeName ) {
           if ( node[ i ].nodeName.toLowerCase() === 'span' && node[ i ].className !== node[ i + 1 ].className ) {
             continue;
