@@ -6,33 +6,31 @@
     <title>VB-Editor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <link rel="preload" href="stylesheets/bootstrap-4.5.0.min.css" as="style">
-    <link rel="preload" href="stylesheets/notifications.css" as="style">
     <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap-4.5.0.min.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/notifications.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/initializer.css">
 
     <link rel="stylesheet" type="text/css" href="stylesheets/main.css">
     <link rel="stylesheet" type="text/css" href="text-editor.css">
 </head>
 
 <body>
-  <header class="container-fluid fixed-top py-2 px-3 border-bottom bg-white shadow-sm">
+  <header class="container-fluid py-2 px-3 bg-white border-bottom shadow-sm position-sticky">
     <div class="nav-top row">
       <div class="nav-left col-auto">
-        <nav class="d-inline-block">
-          <a href="javascript:void(0)">
-            <span class="navbar-logo d-inline-block ml-3 mx-2 mx-sm-3">VBEditor</span>
-          </a>
+        <nav class="d-inline">
+          <a href="javascript:void(0)" class="navbar-brand">VBEditor</a>
         </nav>
       </div>
-      <div class="nav-center col px-lg-0"></div>
-      <div class="nav-right col-auto text-right pl-0">
-        <button class="btn" title="Share links"><span data-feather="link-2"></span></button>
-        <button class="btn" title="Share With friends"><span data-feather="user-plus"></span></button>
-        <button class="btn" title="Settings"><span data-feather="sliders"></span></button>
-        <button class="btn" title="More"><span data-feather="more-vertical"></span></button>
+      <div class="nav-center col helper"></div>
+      <div class="w-100 d-sm-none helper" style="height: 0.5rem;"></div>
+      <div class="col d-sm-none helper"></div>
+      <div class="nav-right col-auto text-right">
+        <button hidden class="btn" title="Share links"><span data-feather="link-2"></span></button>
+        <button hidden class="btn" title="Share With friends"><span data-feather="user-plus"></span></button>
+        <button hidden class="btn" title="Settings"><span data-feather="sliders"></span></button>
+        <button hidden class="btn" title="More"><span data-feather="more-vertical"></span></button>
         <button class="btn btn-primary btn-sm" title="Publish">Publish</button>
-        <div id="auth-card"></div>
       </div>
     </div>
   </header>
@@ -49,7 +47,7 @@
         <!-- EDITOR -->
         <div id="text-editor" class="shadow-sm bg-white rounded-bottom" spellcheck="false">
           <p>This is the <strong>Bold text</strong> <em>italic</em> text.</p>
-          <!-- <h1 class="dam">Write Something ...</h1> -->
+          <h1 class="dam">Write Something ...</h1>
         </div>
       </main>
       <!-- SIDEBAR -->
@@ -63,9 +61,7 @@
               <button class="btn w-100 dropdown-toggle p-2" data-toggle="dropdown" id="textBoxDropdown" aria-haspopup="true" aria-expanded="false" style="height: 4rem;"><img src="images/text-box.svg" alt="text box"><br><span class="text-secondary d-inline-block" style="font-size: 0.9rem;">Text Box</span></button>
               <div class="dropdown-menu custom-shadow" aria-labelledby="textBoxDropdown">
                 <button class="btn w-100 text-secondary" data-item="p" title="p 'tag'">Normal Text</button>
-                <button class="btn w-100 text-secondary" data-item="h1" title="H1 'tag'">Heading</button>
                 <button class="btn w-100 text-secondary" data-item="h2" title="H2 'tag'">Sub Heading</button>
-                <button class="btn w-100 text-secondary" data-item="h3" title="H3 'tag'">Super Heading</button>
               </div>
             </div>
           </div>
@@ -134,17 +130,6 @@
           <div class="dropdown">
             <button class="btn dropdown-toggle" type="button" id="TextStyleDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Text Styles </button>
             <div class="dropdown-menu custom-shadow" aria-labelledby="TextStyleDropdown">
-              <div class="dropright">
-                <button class="btn w-100 dropdown-toggle text-secondary" type="button" id="TextColorKit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Text Color </button>
-                <div class="dropdown-menu custom-shadow border-left border-right" aria-labelledby="TextColorKit">
-                  <button class="btn w-100" data-class="text-primary" title="Text primiry"><span class="text-primary">Text</span></button>
-                  <button class="btn w-100" data-class="text-secondary" title="Text secondary"><span class="text-secondary">Text</span></button>
-                  <button class="btn w-100" data-class="text-success" title="Text sucess"><span class="text-success">Text</span></button>
-                  <button class="btn w-100" data-class="text-info" title="Text info"><span class="text-info">Text</span></button>
-                  <button class="btn w-100" data-class="text-warning" title="Text warning"><span class="text-warning">Text</span></button>
-                  <button class="btn w-100" data-class="text-danger" title="Text danger"><span class="text-danger">Text</span></button>
-                </div>
-              </div>
               <button class="btn w-100" data-tag="mark"><mark class="px-2">Hilight</mark></button>
               <button class="btn w-100" data-tag="small"><small>small</small></button>
               <button class="btn w-100" data-tag="sub">A<sub>sub</sub></button>
@@ -257,7 +242,7 @@
   <script src="javascripts/custom-feature.js"></script>
   <script type="text/javascript">
 feather.replace();
-  </script>
+    </script>
   <script src="text-editor.js"></script>
   </script>
 </body>

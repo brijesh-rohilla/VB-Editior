@@ -19,6 +19,13 @@ h2 {
   font-weight: 600;
 }
 
+.feather-download {
+  height: 16px;
+  width: 16px;
+  margin-top: -2px;
+}
+
+
 .navbar-logo {
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;

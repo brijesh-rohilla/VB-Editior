@@ -22,8 +22,6 @@ Note: The HTML generated is totally dependent on bootstrap classes. In the futur
 * Lists
 * Links
 * Quotes
-* six type <b>Text Color</b>.
-
 
 ### Key Features
 
@@ -39,3 +37,8 @@ Note: The HTML generated is totally dependent on bootstrap classes. In the futur
 * `Ctrl + Shift` - elements are created and append at the before of selected element.
 
 	(Here, elements means new Headings, Paragraph, Lists, Quots etc.)
+
+## Killed by us
+
+* We decide to remove the text-colors. Because we found, there is no need for colored text in blog posts.
+* We decide to keep only one `h1` main heading (on the top of the doc).

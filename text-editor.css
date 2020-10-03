@@ -1,7 +1,5 @@
-/*__PAGE_CONFIG__*/
 html,
-body,
-.page {
+body {
   overflow: hidden;
   height: 100vh;
 }
@@ -10,12 +8,6 @@ aside,
 main {
   overflow-x: hidden;
   overflow-y: auto;
-  /**/
-  margin-top: 3.95rem;
-}
-
-aside {
-  padding-bottom: 5rem;
 }
 
 ::-webkit-scrollbar {
@@ -24,7 +16,6 @@ aside {
 
 ::-webkit-scrollbar-track {
   background: #eee;
-
 }
 
 ::-webkit-scrollbar-thumb {
@@ -46,27 +37,9 @@ aside {
   margin-left: -0.4rem;
 }
 
-.feather-download {
-  height: 16px;
-  width: 16px;
-  margin-top: -2px;
-}
 
-
-/*__EDITOR_NAVBAR__*/
-#editor-nav {
-  position: sticky;
-  top: 0;
-}
-
-#editor-nav .btn:focus {
-  background-color: rgba(1, 1, 1, 0.8);
-}
-
-
-/*__TEXT_EDITOR__*/
-#text-editor,
-#html-editor {
+/* editor */
+#text-editor {
   padding: 1rem 0.8rem;
   margin: 0;
   outline: none;
@@ -74,13 +47,11 @@ aside {
   min-height: 80%;
 }
 
-#text-editor>*,
-#html-editor>* {
+#text-editor>* {
   outline: 2px solid transparent;
 }
 
-#text-editor>*:hover,
-#html-editor>*:hover {
+#text-editor>*:hover {
   cursor: text;
   outline-color: rgba(0, 123, 255, 0.2);
 }
