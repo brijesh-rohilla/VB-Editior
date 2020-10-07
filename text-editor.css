@@ -38,6 +38,7 @@ main {
 }
 
 
+
 /* editor */
 #text-editor {
   padding: 1rem 0.8rem;
@@ -47,121 +48,89 @@ main {
   min-height: 80%;
 }
 
-#text-editor>* {
-  outline: 2px solid transparent;
+#text-editor>*:not(hr) {
+  border: 2px solid transparent;
+  border-radius: 0;
 }
 
 #text-editor>*:hover {
   cursor: text;
-  outline-color: rgba(0, 123, 255, 0.2);
-}
-
-#text-editor>img:hover {
-  cursor: pointer;
+  border-color: rgba(0, 123, 255, 0.2);
 }
 
 
-/*__TOOLBAR__*/
+
+/* toolbar */
 .toolbar {
-  transition: all 0.5s;
+  transform: scale(0.9);
 }
 
-.toolbar .btn,
 header .btn:not([title="Publish"]),
-#editor-nav .btn {
+.toolbar .btn {
   transform: scale(0.9);
   padding: 0.6rem;
   color: #6c757d;
   border-radius: 50% !important;
 }
 
-.toolbar .btn:focus,
 header .btn:not([title="Publish"]):focus,
-aside .btn:focus,
-#editor-nav .btn {
+.toolbar .btn:focus,
+aside .btn:focus {
   box-shadow: none !important;
 }
 
-.toolbar .dropdown-toggle,
-.toolbar .dropdown-menu .btn {
+[data-action="img-alt"] {
   border-radius: 0 !important;
 }
 
-.dropdown-menu .btn:not(.dropdown-toggle):hover,
+.dropdown-menu .btn:hover,
 header .btn:not([title="Publish"]):hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.toolbar .dropdown-toggle:focus,
-aside .dropdown-toggle:focus {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
 .dropdown-menu {
   top: 2.5rem;
   border: none;
+  padding: 3px;
 }
 
-.dropdown-menu .dropdown-menu {
-  margin-left: -0.5rem;
-}
 
-.dropdown-menu[aria-labelledby="textAlignDropdown"],
-.dropdown-menu[aria-labelledby="imageAlignDropdown"],
-.dropdown-menu[aria-labelledby="quoteDropdown"] {
-  min-width: 0;
-  width: 4rem;
-}
-
-#textAlignDropdown::after,
-#ImageEditDropdpwn::after,
-#imageAlignDropdown::after,
-#quoteDropdown::after,
 aside .dropdown-toggle::after {
   content: "";
   display: none;
 }
 
 
-/*__PAERSED_HTML__*/
-.sl-elm {
-  /*active element as selectable text*/
+/* js classes */
+.--is--selected {
+  outline: none;
   transition: all 0.17s;
-  padding: 0.3rem 1rem;
-  outline-color: #007bff !important;
+  padding-bottom: 0.3rem;
+  border-bottom-color: #007bff !important;
 }
 
-.n-sl-elm {
-  /*active element as not selectable text eg. (img)*/
-  cursor: not-allowed !important;
-  transition: all 0.17s;
-  padding: 0.3rem 1rem;
-  outline-color: #ffc107 !important;
+.--is--selected:hover {
+  border-top-color: transparent !important;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
 }
 
-.nh-sl-elm {
-  /*active element as not selectable text hover effect*/
-  outline-color: rgba(255, 193, 7, 0.3) !important;
+figure:hover {
+  border-color: rgba(255, 193, 7, 0.3) !important;
 }
 
-/*Error UI to user when select multi node*/
+figure.--is--selected {
+  border-color: #ffc107 !important;
+}
+
+figure.--is--selected:hover {
+  border-color: #ffc107 !important;
+}
+
+figcaption:focus {
+  outline: none;
+}
+
 .dam {
   opacity: .5;
-}
-
-.cs-el {
-  color: #a7925a;
-}
-
-.cs-at {
-  color: #96b38a;
-}
-
-.cs-at-na {
-  color: #ddca7e;
-}
-
-.bg-cs-dark {
-  background-color: #333333;
-  font: 15px/1.5 Monaco, MonoSpace;
 }

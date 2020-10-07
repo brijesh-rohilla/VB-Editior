@@ -2,17 +2,15 @@
 
   "use strict";
 
-  const EDITOR = "text-editor";
-  const NOT_EDITABLE_CONTENT = ".img-h";
+  const ALIGN_CLASSES = "text-left text-center text-right text-justify";
+  let dummyContent = '<span class="dam">Write Somthing ...</span>';
+  const NOT_EDITABLE_CONTENT = "figure";
   const NOT_LINE_BREAK_CONTENT = "ol ul";
 
-  const ALIGN_CLASSES = "text-left text-center text-right text-justify";
-  const COLOR_CLASSES = "text-primary text-secondary text-success text-info text-warning text-danger";
-
-  var lastPressedKey, lastSelector, ctrlKey, shiftKey, altKey;
+  let lastSelector, ctrlKey, shiftKey, altKey;
 
 
-  // listener for keys perssed
+  // listener for keys perssed globally
   $(document).on({
     keydown: function (event) {
       if (event.ctrlKey) {
@@ -26,96 +24,116 @@
       }
     },
     keyup: function (event) {
-      ctrlKey = false;
-      shiftKey = false;
-      altKey = false;
+      if (event.ctrlKey) {
+        ctrlKey = false;
+      }
+      if (event.shiftKey) {
+        shiftKey = false;
+      }
+      if (event.altKey) {
+        altKey = false;
+      }
     }
   });
 
 
+
   // adjuct Editor and sidebar on screen
-  let customHeight = $('body')[0].getBoundingClientRect().height - $('aside')[0].getBoundingClientRect().top;
-  $('main, aside').css({ 'height': customHeight });
+  let customHeight = $("body")[0].getBoundingClientRect().height - $("aside")[0].getBoundingClientRect().top;
+  $("main, aside").css({ "height": customHeight });
 
   // sidebar slider
-  $('#editor-tool-slider').click(function () {
+  $("#editor-tool-slider").click(function () {
     let selector = $(this);
-    if (selector.attr('aria-expanded') === 'true') {
-      $('aside').css({ 'margin-right': '-13.5rem', 'transition': 'all 0.3s' });
+    if (selector.attr("aria-expanded") === "true") {
+      $("aside").css({ "margin-right": "-13.5rem", "transition": "all 0.3s" });
       selector
         .empty()
-        .append($('<span></span>').attr('data-feather', 'chevron-left'))
-        .attr('aria-expanded', false);
+        .append($("<span></span>").attr("data-feather", "chevron-left"))
+        .attr("aria-expanded", false);
       feather.replace();
     } else {
-      $('aside').css({ 'margin-right': '0rem', 'transition': 'all 0.3s' });
+      $("aside").css({ "margin-right": "0rem", "transition": "all 0.3s" });
       selector
         .empty()
-        .append($('<span></span>').attr('data-feather', 'chevron-right'))
-        .attr('aria-expanded', true);
+        .append($("<span></span>").attr("data-feather", "chevron-right"))
+        .attr("aria-expanded", true);
       feather.replace();
     }
   })
 
 
 
-
   /*!
    * VB-Editor {section}
-   * Handle {factory()} selected element editable, noteditable or innereditable.
+   * Handle {factory()} selected element editable, noteditable.
    * Handle toolbar and fill empty elements.
-   * Attetch linebreak when press enter.
    * .call fn passed arg as `node` object else `jquary` object.
    */
-  $("#" + EDITOR).on("click mousedown", function (event) {
-    let selector = event.target.closest("#" + EDITOR + ">*");
+  $("#text-editor").on("mousedown", function (event) {
+    let selector = event.target.closest("#text-editor>*");
 
     if (!selector && lastSelector) {
       lastSelector
-        .removeClass('sl-elm n-sl-elm')
-        .removeAttr('contentEditable');
+        .removeClass("--is--selected")
+        .removeAttr("contentEditable");
       fillEmptyElement();
       lastSelector = null;
-      $('.toolbar').hide(10);
+      $(".toolbar").hide();
     }
 
-    if (!selector) return;
-
-    // stop selecting already selected element
-    // only toolbar position changed alongside cursor.
-    if (selector.classList.contains('sl-elm' || 'n-sl-elm')) {
-      showToolBar($(selector), event);
-      return;
-    }
+    // return if selector not found (when press outside of element)
+    // and stop selecting already selected element
+    if (!selector || selector.classList.contains("--is--selected")) return;
+    $(".toolbar").hide();
 
     // unselect last active element.
     if (lastSelector) {
       lastSelector
-        .removeClass('sl-elm n-sl-elm')
-        .removeAttr('contentEditable');
+        .removeClass("--is--selected")
+        .removeAttr("contentEditable");
     }
 
     factory.call(selector);
   });
 
 
+  // stop link auto behaviour
+  $("#text-editor").click(function (event) {
+    let selector = event.target.nodeName.toLowerCase();
+    if (selector === "img" || selector === "a") {
+      event.preventDefault();
+    }
+  })
+
+
   function factory() {
+    let notFill = "hr";
     let selector = $(this);
-    let isFound = false;
+    let flag = false;
     fillEmptyElement();
 
-    // select `noteditable` content if present.
-    NOT_EDITABLE_CONTENT.split(" ").forEach((element) => {
-      if (selector.hasClass(element.split(".")[1])) {
-        notEditableContent.call(this);
-        isFound = true;
+    // return if hr, br etc. have
+    notFill.split(" ").forEach(function (element) {
+      if (lastSelector && lastSelector[0].nodeName.toLowerCase() === element) {
+        flag = true;
       }
     })
 
+    if (flag) return;
+
+    // select `noteditable` content if present. e.g. figure
+    NOT_EDITABLE_CONTENT.split(" ").forEach((element) => {
+      if (this.tagName.toLowerCase() === element) {
+        notEditableContent.call(this);
+        flag = true;
+      }
+    })
+
+    if (flag) return;
+
     // here all elemant are `editable`.
-    if (!isFound) {
-      editableContent.call(this);
-    }
+    editableContent.call(this);
   }
 
 
@@ -123,46 +141,66 @@
   function editableContent() {
     let selector = $(this);
 
-    if (selector.hasClass('dam')) {
-      selector.empty().removeClass('dam');
+    // Remove if dummy text exist
+    if (this.innerHTML === dummyContent) {
+      selector.empty();
     }
 
-    selector.addClass('sl-elm');
+    selector.addClass("--is--selected");
     this.contentEditable = true;
     lastSelector = $(this);
+    newLineBreak.call(this);
 
-    showToolBar(selector, event);
-    lineBreak.call(this);
-
-    selector[0].onselectstart = function () {
-      joinElem(selector[0]);
+    // join text node
+    this.onselectstart = function () {
+      joinElem(this);
     }
 
-    // selector.paste(function (event) {
-    //   console.log(event);
-    // })
-    this.addEventListener('paste', function (event) {
-      console.log(event.clipboardData)
+    // paste only text
+    this.addEventListener("paste", function (event) {
+      let data = (event.clipboardData || window.clipboardData).getData("text");
+      let selection = window.getSelection();
+      let range = selection.getRangeAt(0);
+      if (!selection.rangeCount) return false;
+
+      selection.deleteFromDocument();
+      range.insertNode(document.createTextNode(data));
+      event.preventDefault();
     })
   }
+
 
 
   function notEditableContent() {
     let selector = $(this);
 
-    selector.addClass('n-sl-elm');
+    selector.addClass("--is--selected");
     lastSelector = $(this);
 
-    showToolBar(selector, event);
+    selector.off("click").click(function () {
+      showToolBar(this);
+
+      // style applied for images
+      // if (selector.hasClass('img-h')) {
+      //   isClass(selector.find('img'), 'img-thumbnail');
+      //   isClass(selector.find('img'), 'rounded');
+      // }
+    })
   }
 
 
+  function isClass(selector, className) {
+    if (selector.hasClass(className)) {
+      fillToolbar(className);
+    }
+  }
 
-  function lineBreak() {
+
+  function newLineBreak() {
     let selector = $(this);
     let isLineBreak = true;
 
-    // disable linebreake on press enter.
+    // disable NewParagraph on press enter.
     // e.g. (ol, ul)
     NOT_LINE_BREAK_CONTENT.split(" ").forEach(function (element) {
       if (selector[0].nodeName.toLowerCase() === element) {
@@ -170,83 +208,143 @@
       }
     });
 
-    selector.off('keydown').keydown(function (event) {
-      if (event.keyCode === 13 && isLineBreak) {
+    selector.off("keydown").keydown(function (event) {
+      if ((event.code === "Enter" || event.code === "NumpadEnter") && isLineBreak) {
         let selection = window.getSelection();
-        event.preventDefault();
+        if (!selection.rangeCount) return false;
 
-        if (selection.isCollapsed) {
-          let range = selection.getRangeAt(0);
-          let selectorChild = selection.anchorNode;
-          range.insertNode(document.createElement('br'));
+        selection.deleteFromDocument();
+        let range = selection.getRangeAt(0);
 
-          if (selection.anchorOffset === selectorChild.length) {
-            if (selectorChild.data === selector.text().substr(-selectorChild.length, selectorChild.length) && lastPressedKey !== 8) {
-              range.insertNode(document.createElement('br'));
-            }
-          }
-          selection.collapseToEnd();
+        // Line break as <br>
+        if (event.shiftKey) {
+          let newLine = document.createElement("br");
+          range.insertNode(newLine);
+          return;
         }
-      }
-      lastPressedKey = event.keyCode;
-    })
 
+        // Line break as <p>
+        let frag = document.createDocumentFragment();
+        let newParagraph = document.createElement("p");
+        let node, nextNode, pNode, existElement;
+
+        // append node to selected element
+        range.insertNode(newParagraph);
+        pNode = newParagraph;
+
+        while (pNode !== this) {
+
+          if (pNode !== newParagraph) {
+            existElement = document.createElement(pNode.nodeName.toLowerCase());
+            existElement.append(frag);
+            frag.append(existElement);
+          }
+
+          while (node = pNode.nextSibling) {
+            nextNode = frag.append(node);
+          }
+
+          pNode = pNode.parentNode;
+        }
+
+        // create new paragraph
+        newParagraph.append(frag);
+        this.after(newParagraph);
+
+        // activate new paragraph
+        lastSelector
+          .removeClass("--is--selected")
+          .removeAttr("contentEditable");
+        fillEmptyElement();
+        editableContent.call(newParagraph);
+        newParagraph.focus();
+        event.preventDefault();
+      }
+
+      if (event.code === "Backspace" && !this.textContent && this.nodeName.toLowerCase() !== "h1") {
+        factory.call(this.previousElementSibling);
+        let selection = window.getSelection();
+
+        this.previousElementSibling.focus();
+        selection.getRangeAt(0).selectNodeContents(this.previousElementSibling);
+        selection.collapseToEnd();
+        this.remove();
+        event.preventDefault();
+      }
+
+    })
   }
 
 
   function fillEmptyElement() {
-    let notFill = "br, hr, " + NOT_EDITABLE_CONTENT;
-    let customText = 'Write Somthing ...';
+    let notFill = "br hr " + NOT_EDITABLE_CONTENT;
 
-    let emptyElement = $('#text-editor>*:not(' + notFill + '):empty');
-    emptyElement.addClass('dam').text(customText);
+    if (!lastSelector) return;
 
-    let selector = $('#text-editor>*:not(' + notFill + ')');
-    selector.each(function (element) {
-      if (this.textContent.length === customText.length && this.textContent === customText) {
-        $(this).addClass('dam');
+    if (!lastSelector.text()) {
+      let flag = false;
+
+      notFill.split(" ").forEach(function (element) {
+        if (lastSelector[0].nodeName.toLowerCase() === element) {
+          flag = true;
+        }
+      })
+
+      if (!flag) {
+        lastSelector.html(dummyContent);
       }
-    });
-
+    }
   }
 
 
-  function showToolBar(element, event) {
-    let selector = element[0];
-    let mouseTop = event.pageY;
-    let mouseLeft = event.pageX / 3.5;
-    let posTop = selector.getBoundingClientRect().top;
-    let posLeft = selector.getBoundingClientRect().left;
-    $('#btn-list-unstyled').hide();
 
-    // show {btn-list-unstyled} button if selected element is a list.
-    NOT_LINE_BREAK_CONTENT.split(" ").forEach(function (elem) {
-      if (selector.nodeName.toLowerCase() === elem) {
-        $('#btn-list-unstyled').show();
+  // get initial react of text-toolbar
+  let toolRect = $("#text-toolbar")[0].getBoundingClientRect();
+  $("#text-toolbar").hide();
+
+  function showToolBar(selector) {
+    let selection = window.getSelection();
+    let rangeRect, diff, flag = false;
+
+    // return if selector is figcaption
+    if (selector.nodeName.toLowerCase() === "figcaption") return;
+
+    // if selector is notEditable e.g. (figure)
+    NOT_EDITABLE_CONTENT.split(" ").forEach((element) => {
+      if (selector.tagName.toLowerCase() === element) {
+        flag = true;
       }
-    });
+    })
 
-    if (element.hasClass('img-h')) {
-      $('#text-toolbar').hide(10);
-      $('#img-toolbar').css({ 'top': (posTop - 65), 'left': posLeft }).show();
-    } else {
-      $('#img-toolbar').hide(10);
-      if (mouseTop < 220) {
-        $('#text-toolbar').css({ 'top': (mouseTop + 30), 'left': (posLeft + mouseLeft) }).show();
+    if (!selection.isCollapsed) {
+      let range = selection.getRangeAt(0);
+      rangeRect = range.getBoundingClientRect();
+      diff = (toolRect.width / 2) - (rangeRect.width / 2);
+    }
+
+    let selectorRect = selector.getBoundingClientRect();
+    let imgDiff = (toolRect.width / 2) - (selectorRect.width / 2);
+
+    if (!flag && !selection.isCollapsed) {
+      $("#img-toolbar").hide();
+      if (rangeRect.top < 150) {
+        $("#text-toolbar").css({ "top": (rangeRect.bottom + 3), "left": (rangeRect.left - 31.2) - diff }).show();
       } else {
-        $('#text-toolbar').css({ 'top': (mouseTop - 80), 'left': (posLeft + mouseLeft) }).show();
+        $("#text-toolbar").css({ "top": ((rangeRect.top - toolRect.height) - 15), "left": (rangeRect.left - 31.2) - diff }).show();
       }
+    } else if (flag) {
+      $("#text-toolbar").hide();
+      $("#img-toolbar").css({ "top": ((selectorRect.top - toolRect.height) - 10), "left": (selectorRect.left - 31.2) - imgDiff }).show();
     }
-
   }
 
-  // Hide selected element toolbar
-  $('aside, aside .btn, header, #editor-nav').click(function (event) {
-    if (lastSelector && !ctrlKey) {
-      $('.toolbar').hide(10);
-    }
-  });
 
+  $("main").scroll(function () {
+    let selector = $(".--is--selected")[0];
+    if (!selector) return;
+
+    showToolBar(selector);
+  })
 
 
   /*!
@@ -254,16 +352,11 @@
    * Initilize toolbar menu actions.
    * e.g. id & onclick
    */
-  $('.toolbar .btn, aside .btn').each(function () {
+  $(".toolbar .btn, aside .btn").each(function () {
 
     if (this.dataset.tag) {
       this.onclick = () => createTag(this.dataset.tag);
       this.id = "btn-" + this.dataset.tag;
-    }
-
-    if (this.dataset.align) {
-      this.onclick = () => alignItem(this.dataset.align);
-      this.id = "btn-" + this.dataset.align;
     }
 
     if (this.dataset.item) {
@@ -274,11 +367,14 @@
     // Handle individual functions.
     if (this.dataset.action) {
 
-      if (this.dataset.action === 'deleteItem') {
+      if (this.dataset.action === "deleteItem") {
         this.onclick = () => deleteItem();
-      } else if (this.dataset.action === 'imgLink') {
+      }
+
+      if (this.dataset.action === "imgLink") {
         this.onclick = () => imgLink();
       }
+
       this.id = "btn-" + this.dataset.action;
     }
 
@@ -295,23 +391,17 @@
    * Fill toolbar button back-ground
    * when clicked on buttons.
    */
-  $('.toolbar .btn:not(.dropdown-toggle)').click(function () {
+  $(".toolbar .btn").click(function () {
     let selector = $(this);
 
-    if (this.dataset.align || this.dataset.class) {
-      if (selector.css('background-color') === 'rgba(0, 0, 0, 0.05)') {
-        selector.siblings().css('background-color', '');
-      }
+    if (selector.css("background-color") === "rgba(0, 0, 0, 0.06)") {
+      selector.css("background-color", "")
+    } else {
+      selector.css("background-color", "rgba(0, 0, 0, 0.06)");
     }
 
-    if (this.dataset.align) {
-      $('.dropdown-toggle.text-align').html(`<span data-feather="align-${this.dataset.align.split("-")[1]}"></span>`);
-      feather.replace();
-    }
-
-    (selector.css('background-color') === 'rgba(0, 0, 0, 0.06)') ?
-    selector.css('background-color', ''): selector.css('background-color', 'rgba(0, 0, 0, 0.06)');
   });
+
 
 
 
@@ -319,105 +409,52 @@
    * Fill toolbar button back-ground
    * if any style already applied.
    */
-  document.onselectionchange = function () {
-    let selector = $('.sl-elm, .n-sl-elm');
-    let selection = window.getSelection();
+  let debounceFillToolBar = debounce(fillToolBar, 300);
 
-    if (!selection.anchorNode || !selector[0]) {
+  document.onselectionchange = function (event) {
+    // showToolBar fn call inside this fn
+    debounceFillToolBar(event.target.activeElement);
+  }
+
+
+  function fillToolBar(selector) {
+
+    // return if text-editor not contain selector
+    if (!$("#text-editor")[0].contains(selector)) return;
+    let selection = window.getSelection();
+    let range = selection.getRangeAt(0);
+
+    // Select figcaption node
+    if (selection.isCollapsed && selector.nodeName.toLowerCase() === "figcaption") {
+      range.selectNodeContents(selection.anchorNode);
+    }
+
+    // Select #text node if press Ctrl key
+    if (ctrlKey && selection.isCollapsed) {
+      range.selectNodeContents(selection.anchorNode);
+    }
+
+    $(".toolbar .btn").css("background-color", "");
+    showToolBar(selector);
+
+    if (selection.isCollapsed) {
+      $(".toolbar").hide();
       return;
     }
 
-    let range = selection.getRangeAt(0);
-var oRect = range.getBoundingClientRect();
-console.log(oRect)
     // show style applied for markep tag
-    // these are always child
-    if (!selection.isCollapsed) {
-      let node = selection.anchorNode;
-      let parent = node.parentNode;
+    let node = selection.anchorNode; // select text node
+    let parent = node; // select html node (parent)
 
-      if (selection.toString() === node.data) {
-        $('.toolbar .btn').css('background-color', '');
-
-        while (parent.className !== 'sl-elm') {
-          (parent.nodeName.toLowerCase() === 'span') ?
-          fillToolbar(parent.className):
-            fillToolbar(parent.nodeName.toLowerCase());
-
-          parent = parent.parentNode;
-          if (!parent) break;
-        }
+    while (parent !== selector) {
+      if (node.textContent.includes(selection.toString())) {
+        fillToolbar(parent.nodeName.toLowerCase());
       }
-
-    } else {
-      let parent = selection.anchorNode.parentNode;
-      $('.toolbar .btn').css('background-color', '');
-
-      while (parent.className !== 'sl-elm') {
-        (parent.nodeName.toLowerCase() === 'span') ?
-        fillToolbar(parent.className):
-          fillToolbar(parent.nodeName.toLowerCase());
-
-        parent = parent.parentNode;
-        if (!parent) break;
-      }
-
-      // Select #text node if press Ctrl key
-      if (ctrlKey) {
-        range.selectNodeContents(selection.anchorNode);
-      }
-
-    }
-
-    // style applied for alignment
-    // these are always perent
-    if (!selection.isCollapsed && selection.toString() === selector.text()) {
-      $('.dropdown-toggle.text-align').html(`<span data-feather="align-left"></span>`);
-      feather.replace();
-
-      ALIGN_CLASSES.split(" ").forEach(function (element) {
-        isClass(selector, element);
-      });
-
-      COLOR_CLASSES.split(" ").forEach(function (element) {
-        isClass(selector, element);
-      });
-
-      isClass(selector, 'lead');
-      isClass(selector, 'list-unstyled');
-
-    } else {
-      $('.dropdown-toggle.text-align').html(`<span data-feather="align-left"></span>`);
-      feather.replace();
-
-      ALIGN_CLASSES.split(" ").forEach(function (element) {
-        isClass(selector, element);
-      });
-
-      COLOR_CLASSES.split(" ").forEach(function (element) {
-        isClass(selector, element);
-      });
-
-      isClass(selector, 'lead');
-      isClass(selector, 'list-unstyled');
-
-
-      // style applied for images
-      if (selector.hasClass('img-h')) {
-        isClass(selector.find('img'), 'img-thumbnail');
-        isClass(selector.find('img'), 'rounded');
-      }
+      parent = parent.parentNode;
     }
 
   }
 
-
-  function isClass(selector, className) {
-    if (selector.hasClass(className)) {
-      fillToolbar(className);
-    }
-
-  }
 
 
   /**
@@ -425,176 +462,126 @@ console.log(oRect)
    * for styled applied on selected #text.
    */
   function fillToolbar(tag) {
-    let alignToggler = $('.dropdown-toggle.text-align');
-    $('.toolbar').find("#btn-" + tag).css('background-color', 'rgba(0, 0, 0, 0.06)');
-
-    switch (tag) {
-    case 'text-left':
-      alignToggler.html(`<span data-feather="align-left"></span>`);
-      feather.replace();
-      break;
-    case 'text-center':
-      alignToggler.html(`<span data-feather="align-center"></span>`);
-      feather.replace();
-      break;
-    case 'text-right':
-      alignToggler.html(`<span data-feather="align-right"></span>`);
-      feather.replace();
-      break;
-    case 'text-justify':
-      alignToggler.html(`<span data-feather="align-justify"></span>`);
-      feather.replace();
-      break;
-    }
+    $(".toolbar").find("#btn-" + tag).css("background-color", "rgba(0, 0, 0, 0.06)");
   }
 
 
 
   /*!
    * VB-Editor {section}
-   * apply style and tags to selected text.
+   * apply tags to selected text.
    */
   function createTag(tag) {
-    let selector = $('.sl-elm');
+
     let selection = window.getSelection();
-    let sameElement = selector.find(tag);
+
+    if (selection.isCollapsed) return;
+
+    let range = selection.getRangeAt(0);
+    let fragment = range.extractContents();
+    let selector = $(".--is--selected");
     let newNode = document.createElement(tag);
 
-    if (!selection.isCollapsed) {
-      let range = selection.getRangeAt(0);
-      let fragment = range.cloneContents();
-      newNode.append(fragment);
+    newNode.append(fragment);
 
-      // Remove if any child exists (same style)
-      let innerChild = $(newNode).find(tag);
-      innerChild.each(function () {
-        $(this).before(this.innerHTML).remove();
-      });
+    // if tag is a link
+    if (tag === "a") {
+      let link = window.prompt("URL:", "https://");
+      if (!link) return;
+      $(newNode).attr({ "href": link, "target": "_blank" });
+    }
 
-      // Remove style if selected text have already.
-      for (let i = 0; i < sameElement.length; i++) {
-        if (sameElement[i].textContent === selection.toString()) {
-          sameElement[i].remove();
-          insertHtml(newNode.innerHTML, range, true);
-          selector[0].normalize();
-          return;
+
+    // Remove if any child exists (same style)
+    $(newNode).find(tag).each(function () {
+      $(this).before(this.innerHTML).remove();
+    });
+
+    range.insertNode(newNode)
+    range.selectNodeContents(newNode);
+
+    // Remove style if any parent exists (same style)
+    let perviousFrag = document.createDocumentFragment();
+    let nextFrag = document.createDocumentFragment();
+    let middleFrag = document.createDocumentFragment();
+    let parent = newNode.parentElement;
+    let node, nextNode, pNode;
+
+    while (newNode.parentElement && parent !== selector[0]) {
+      if (parent.nodeName.toLowerCase() === tag && parent.textContent.includes(newNode.textContent)) {
+
+        // join pervious node
+        while (node = newNode.previousSibling) {
+          nextNode = perviousFrag.append(node);
         }
-      }
 
-      // if tag is a link
-      if (tag === 'a') {
-        let link = window.prompt('URL:', 'https://');
-        if (!link) return;
-        $(newNode).attr({ 'href': link, 'target': '_blank' });
-      }
+        // join next node
+        while (node = newNode.nextSibling) {
+          nextNode = nextFrag.append(node);
+        }
 
-      range.deleteContents();
-      insertHtml(newNode, range, true);
+        // join middel node
+        while (node = newNode.firstChild) {
+          nextNode = middleFrag.append(node);
+        }
 
-      // Remove style if any parent exists (same style) {bug with color when tag is papent}
-      let parent = newNode.parentElement;
-      while (parent && parent.className !== 'sl-elm') {
-        if (parent.nodeName.toLowerCase() === tag) {
-          if (parent.textContent.indexOf(newNode.textContent) !== -1) {
-            let pNode = parent.outerHTML.split(newNode.outerHTML);
-            fragment.append(parseToValidHtml(pNode[0]), parseToValidHtml(newNode.innerHTML), parseToValidHtml(`<${tag}>${pNode[ 1 ]}`));
-            parent.before(fragment);
-            range.selectNodeContents(parent.previousSibling.previousSibling);
-            parent.remove();
-            joinElem(selector[0]);
+        // fit into outer html nodes
+        pNode = newNode;
+        while (true) {
+          pNode = pNode.parentElement;
+
+          let node = pNode.nodeName.toLowerCase();
+          let perviousNode = document.createElement(node);
+          let middelNode = document.createElement(node);
+          let nextNode = document.createElement(node);
+
+          perviousNode.append(perviousFrag);
+          perviousFrag.append(perviousNode);
+
+          nextNode.append(nextFrag);
+          nextFrag.append(nextNode);
+
+          if (pNode !== parent) {
+            middelNode.append(middleFrag);
+            middleFrag.append(middelNode);
           }
-        }
-        parent = parent.parentElement;
-        if (!parent) break;
-      }
 
-    } else {
-      let styleApplied = false;
-      let range = selection.getRangeAt(0);
-
-      // Remove style if selected text have already.
-      for (let i = 0; i < sameElement.length; i++) {
-        if (sameElement[i].textContent === selector.text()) {
-          styleApplied = true;
-        }
-        sameElement.eq(i).before(sameElement[i].innerHTML).remove();
-      }
-      selector[0].normalize();
-
-      if (!styleApplied) {
-
-        // if tag is a link
-        if (tag === 'a') {
-          let link = window.prompt('URL:', 'https://');
-          if (!link) return;
-          $(newNode).attr({ 'href': link, 'target': '_blank' });
+          if (pNode === parent) break;
         }
 
-        range.selectNodeContents(selector[0]);
-        range.surroundContents(newNode);
-      }
-    }
-  }
+        range.selectNode(parent);
+        range.deleteContents(parent);
 
-
-  function parseToValidHtml(html) {
-    let elem = document.createElement("div");
-    let frag = document.createDocumentFragment();
-    let node, lastNode;
-    elem.innerHTML = html;
-    while ((node = elem.firstChild)) {
-      lastNode = frag.appendChild(node);
-    }
-    return frag;
-  }
-
-  function paeseMissingTag(str) {
-    let patt = /<\/.+?>/g;
-    let result, arr = [];
-
-    if (result = str.match(patt)) {
-      for (let i = result.length - 1; i >= 0; i--) {
-        if (str.indexOf('<' + result[i].split("/")[1]) === -1) {
-          arr.push('<' + result[i].split("/")[1]);
+        if (perviousFrag.textContent) {
+          range.insertNode(perviousFrag);
+          range.collapse(false);
         }
+
+        if (nextFrag.textContent) {
+          range.insertNode(nextFrag);
+          range.collapse(true);
+        }
+        range.insertNode(middleFrag);
+        return;
       }
+      parent = parent.parentElement;
     }
 
-    return arr.join("");
-  }
-
-  function insertHtml(html, range, isCollapsed) {
-    let elem = document.createElement("div");
-    let frag = document.createDocumentFragment();
-    let node, lastNode;
-
-    // if (true) insert before, else after.  
-    range.collapse(isCollapsed);
-    if (typeof html === "object") {
-      range.insertNode(html);
-      return;
-    }
-
-    elem.innerHTML = html;
-    while ((node = elem.firstChild)) {
-      lastNode = frag.appendChild(node);
-    }
-    range.insertNode(frag);
   }
 
 
   function joinElem(element) {
-    let node = element.childNodes;
     element.normalize();
+    let node = element.childNodes;
 
     for (let i = 0; i < node.length - 1; i++) {
-      if (node[i].nodeType !== 3 && node[i].nodeName.toLowerCase() !== 'li') {
+      if (node[i].nodeType !== 3 && node[i].nodeName.toLowerCase() !== "li") {
         if (node[i].nodeName === node[i + 1].nodeName) {
           $(node[i]).append(node[i + 1].innerHTML);
           node[i + 1].remove();
           i--;
         } else {
-          $('.sl-elm').find(':empty').remove();
+          $(element).find(":empty").remove();
         }
       }
     }
@@ -602,44 +589,12 @@ console.log(oRect)
   }
 
 
-  function alignItem(style) {
-    let selection = window.getSelection();
-    let selector = $('.sl-elm, .n-sl-elm');
-
-    if (!selection.isCollapsed) {
-      let range = selection.getRangeAt(0);
-
-      if (selection.toString() === selector.text()) {
-        selector.removeClass(ALIGN_CLASSES);
-        selector.addClass(style);
-      } else {
-        selection.removeRange(range);
-      }
-
-    } else {
-      selector.removeClass(ALIGN_CLASSES);
-      selector.addClass(style);
-    }
-  }
-
 
   function deleteItem() {
-    let selection = window.getSelection();
-    let selector = $('.sl-elm, .n-sl-elm');
+    let selector = $(".--is--selected");
 
-    if (!selection.isCollapsed) {
-      let range = selection.getRangeAt(0);
-
-      if (selection.toString() === selector.text()) {
-        $('.toolbar').hide(10);
-        selector.remove();
-      } else {
-        selection.removeRange(selection.getRangeAt(0));
-      }
-    } else {
-      $('.toolbar').hide(10);
-      selector.remove();
-    }
+    selector.remove();
+    $(".toolbar").hide(10);
   }
 
 
@@ -647,135 +602,135 @@ console.log(oRect)
     let newNode = document.createElement(element);
     let selector = $(newNode);
 
-    if (element === 'blockquote') {
+    if (element === "blockquote") {
       selector
-        .addClass('blockquote')
+        .addClass("blockquote")
         .append(
-          $('<p></p>').addClass('mb-0').text('Write Quote ...'),
-          $('<footer></footer>').addClass('blockquote-footer text-right').append($('<cite></cite>').text('author'))
+          $("<p></p>").addClass("mb-0").text("Write Quote ..."),
+          $("<footer></footer>").addClass("blockquote-footer text-right").append($("<cite></cite>").text("author"))
         );
     }
 
     NOT_LINE_BREAK_CONTENT.split(" ").forEach(function (elem) {
       if (element === elem) {
-        $(newNode).prepend($('<li></li>'));
+        $(newNode).prepend($("<li></li>"));
       }
     });
 
 
     if (ctrlKey && shiftKey) {
-      $('.sl-elm, .n-sl-elm').before(newNode);
+      $(".--is--selected").before(newNode);
     } else if (ctrlKey) {
-      $('.sl-elm, .n-sl-elm').after(newNode);
+      $(".--is--selected").after(newNode);
     } else {
-      $('#text-editor').append(newNode);
+      $("#text-editor").append(newNode);
     }
 
+    // activate new paragraph
+    if (lastSelector) {
+      lastSelector
+        .removeClass("--is--selected")
+        .removeAttr("contentEditable");
+    }
     fillEmptyElement();
-    $(newNode).click().focus();
-    $('.toolbar').hide();
+    $(".toolbar").hide();
+    if (element !== "hr") {
+      factory.call(newNode);
+      newNode.focus();
+    }
   }
 
 
-  /**
-   * Check for image is figure or a image!
-   * Then extract data from image blob
-   * and show on editor.
+
+
+  /*!
+   * VB-Editor {section}
+   * Fatch Image data
    */
-  $('#set-caption').change(function () {
-    if ($('#set-caption')[0].checked) {
-      $('#img-caption-tag')
-        .removeClass('is-invalid')
-        .removeAttr('disabled')
-        .focus();
-    } else {
-      $('#img-caption-tag')
-        .removeClass('is-invalid')
-        .attr('disabled', '');
-    }
+  let imgAltForm = document.forms["setImg-alt"];
+  let imgFiles = [];
+
+  // show alt tag model
+  $("[data-action='img-alt']").click(function () {
+    $("#set-img-alt").modal("show");
   });
 
 
-  $('#img-uploader').change(function () {
-    if (!this.files[0]) return;
+  $("#img-uploader").change(function (event) {
 
-    let imgFile = this.files[0];
+    let file = this.files[0];
     this.value = "";
 
-    if (imgFile.size > 500 * 1024) {
-      NotificationCloseable('Exceed file size!', 'Image size must be less then 500 KB', 'error');
-      return;
+    if (!file) return;
+
+    // push image and img  id to array
+    let obj = {
+      img: file,
+      id: rendomId()
     }
 
-    $('body')
-      .append($("<div></div>").attr('class', 'modal-backdrop fade show'))
-      .css('overflow', 'hidden');
+    imgFiles.push(obj);
 
-    $('#set-img').show();
-    $('#img-alt-tag').focus();
 
-    $('#set-img-form').off('submit').submit(function (event) {
-      event.preventDefault();
-      fatchImage(imgFile, $('#img-alt-tag').val(), $('#img-caption-tag').val());
-      $('#set-img .close').click();
-    });
+    // fatch image
+    let img = document.createElement("img");
+    let fig = $("<figure></figure>").addClass("figure");
+    let captionTag = $("<figcaption></figcaption>")
+      .text("Type caption for image (optional)")
+      .attr("contentEditable", "true")
+      .addClass("text-center figure-caption");
+
+    $(img).attr({ "class": "figure-img img-fluid", "name": obj.id });
+
+    img.src = URL.createObjectURL(file);
+
+    $("#text-editor").append($(fig).append(img, captionTag));
+
+    imgAltForm.reset();
+
+    if (lastSelector) {
+      lastSelector
+        .removeClass("--is--selected")
+        .removeAttr("contentEditable");
+    }
+
+    fillEmptyElement();
+    $(".toolbar").hide();
   });
 
 
-  // Extract data from img as blob
-  function fatchImage(file, alt, caption) {
-    let div = $('<div></div>').addClass('text-center img-h');
-    let img = document.createElement('img');
-    let reader = new FileReader();
+  // attetch image alt
+  imgAltForm.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-    reader.readAsDataURL(file);
+    let alt = imgAltForm.elements.alt.value;
+    $("#set-img-alt").modal("hide");
 
-    reader.onload = function (event) {
+    $(".--is--selected").find("img").attr({ "alt": alt });
+  })
 
-      if ($('#set-caption')[0].checked) {
-        let fig = $('<figure></figure>').addClass('figure');
-        let captionTag = $('<figcaption></figcaption>').text(caption).addClass('text-center figure-caption');
-        $(img).attr({ 'class': 'figure-img img-fluid rounded', 'alt': alt });
-        img.src = event.target.result;
-        $('#text-editor').append($(div).append($(fig).append(img, captionTag)));
-      } else {
-        $(img).attr({ 'class': 'img-fluid', 'alt': alt });
-        img.src = event.target.result;
-        $('#text-editor').append($(div).append(img));
-      }
 
-      $('#set-img-form')[0].reset();
-      $('#img-caption-tag').attr('disabled', '');
-    }
-
+  function imgStyle(style) {
+    let selector = $(".--is--selected");
+    selector.find("img").toggleClass(style);
   }
 
 
   function imgLink() {
-    let link = window.prompt('Insert Link:', 'https://');
+    let link = window.prompt("Insert Link:", "https://");
     if (!link) return;
 
-    let selector = $('.n-sl-elm.img-h');
+    let selector = $(".--is--selected");
 
     if (selector[0]) {
-      let node = $('<a></a>').attr({ 'href': link, 'target': '_blank' });
+      let node = $("<a></a>").attr({ "href": link, "target": "_blank" });
 
-      if (selector.find('figcaption')[0]) {
-        node.append(selector.find('img'), selector.find('figcaption'));
-        selector.append(selector.find('figure').append(node));
-      } else {
-        node.append(selector.find('img'));
-        selector.append(node);
-      }
+      node.append(selector.find("img"));
+      selector.prepend(node);
     }
 
   }
 
-
-  function imgStyle(style) {
-    let selector = $('.n-sl-elm');
-    selector.find('img').toggleClass(style);
-  }
 
 
   /**
@@ -785,18 +740,22 @@ console.log(oRect)
   $(document).on({
     keydown: function (event) {
 
-      // toggle toolber
-      if (shiftKey && ctrlKey) {
-        $('.toolbar').toggle();
-      }
-
-      // toggle text color dropdown
-      if (altKey && event.keyCode === 67) {
-        $('#TextStyleDropdown').click();
-        $('#TextColorKit').click();
-      }
+ 
     }
   });
+
+
+  function debounce(func, ms) {
+    let timeout;
+    return function () {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, arguments), ms);
+    };
+  }
+
+  function rendomId() {
+    return Math.random().toString(36).substr(2, 5);
+  }
 
 
 }());

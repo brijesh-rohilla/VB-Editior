@@ -8,33 +8,25 @@ Note: The HTML generated is totally dependent on bootstrap classes. In the futur
 * Toolbar that's dance on your hand.
 * Styles supported : 
   <b>`bold`</b>,    <b>`italic`</b>,
-<b>`underline`</b>, <b>`deleted`</b>,
-<b>`highlight`</b>, <b>`small`</b>,
-<b>`subscript`</b>, <b>`superscript`</b>
+	<b>`subscript`</b>, <b>`superscript`</b>
+	<b>`highlight`</b>
 
 * Headings : <br>
 	<b>`<h1>`</b> - main heading <br>
 	<b>`<h2>`</b> - sub heading <br>
-	<b>`<h3>`</b> - super heading
-
-* Paragraph
-* Images
-* Lists
-* Links
-* Quotes
 
 ### Key Features
 
 * `Ctrl` then click on text - select the text. (styled)
-* `Alt + c` - Toggle text color dropdown.
-* `Ctrl + Shift` - Tiggle Toolbar. (when you need to hide toolbar and vice versa)
-
 
 ### control newly created element
 
-* `by default` elements are created and append at the very last.
-* `Ctrl` - elements are created and append at the last of the selected element.
-* `Ctrl + Shift` - elements are created and append at the before of selected element.
+* `press Enter` - create new paragraph automatically.
+* `Shift + Enter` - make a single-spaced line break.
+
+* `Ctrl` - elements are created after the selected element.
+* `Ctrl + Shift` - elements are created before the selected element.
+* `by default` elements are created at the very last.
 
 	(Here, elements means new Headings, Paragraph, Lists, Quots etc.)
 
@@ -42,3 +34,4 @@ Note: The HTML generated is totally dependent on bootstrap classes. In the futur
 
 * We decide to remove the text-colors. Because we found, there is no need for colored text in blog posts.
 * We decide to keep only one `h1` main heading (on the top of the doc).
+* We decide to remove `underline`, `deleted` and `small` Tags.
