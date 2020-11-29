@@ -1,52 +1,40 @@
-( function() {
+(function () {
+  'use strict';
 
-  "use strict";
-
-  // modify download button.
-  $( '.nav-right>.btn:last' )
-    .attr( { 'id': 'doc-download' } )
-    .html( `<span data-feather="download"></span> Download` );
-  feather.replace();
-
-
-  $( '#doc-download' ).click( function() {
-    let link = document.createElement( 'a' );
+  $('#doc-download').click(function () {
+    let link = document.createElement('a');
     link.download = 'vb-doc.html';
 
-    let blob = new Blob( [ htmlTemplete( parseSourceCode() ) ], { type: 'text/html' } );
+    let blob = new Blob([htmlTemplete(parseSourceCode())], { type: 'text/html' });
 
-    link.href = URL.createObjectURL( blob );
+    link.href = URL.createObjectURL(blob);
     link.click();
 
-    URL.revokeObjectURL( link.href );
-  } )
-
+    URL.revokeObjectURL(link.href);
+  });
 
   function parseSourceCode() {
-    let notRemove = "br, hr, img";
-    let selector = $( "<div></div>" );
-    selector.html( $( '#text-editor' ).html() );
+    let notRemove = 'br, hr, img';
+    let selector = $('<div></div>');
+    selector.html($('#text-editor').html());
 
-    selector.find( ":not(" + notRemove + "):empty" ).remove();
+    selector.find(':not(' + notRemove + '):empty').remove();
 
-    selector.find( "*" )
-      .removeClass( 'sl-elm n-sl-elm' )
-      .removeAttr( 'contentEditable' );
+    selector.find('*').removeClass('sl-elm n-sl-elm').removeAttr('contentEditable');
 
-    selector.find( "*" ).each( function() {
-      if ( !$( this ).attr( "class" ) ) {
-        $( this ).removeAttr( "class" );
+    selector.find('*').each(function () {
+      if (!$(this).attr('class')) {
+        $(this).removeAttr('class');
       }
-    } )
+    });
 
-    selector.find( "img" )
-      .attr( "href", "../path/to/image" );
+    selector.find('img').attr('href', '../path/to/image');
 
     return selector.html();
   }
 
   // HTML htmlTemplete
-  function htmlTemplete( data ) {
+  function htmlTemplete(data) {
     return `<!doctype html>
 <html class="no-js" lang="">
 
@@ -94,8 +82,6 @@ ga( 'send', 'pageview' )
   <script src="https://www.google-analytics.com/analytics.js" async></script>
 </body>
 
-</html>`
+</html>`;
   }
-
-
-} )();
+})();
